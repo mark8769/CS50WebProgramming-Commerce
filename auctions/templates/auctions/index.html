@@ -1,0 +1,56 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    {% if created_listing %}
+    <div class="alert alert-success" role="alert">
+        Listing successfully created!
+    </div>
+    {% endif %}
+
+    <h2>Active Listings</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for listing in listings %}
+    <div class="col">
+        <div class="card h-100">
+            {% if listing.image_url|length > 1 %}
+                <img class="card-img-top" src="{{ listing.image_url }}" alt="{{ listing.auction_title }}">
+            {% else %}
+                <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png">
+            {% endif %}
+        
+            <div class="card-body">
+                <h5 class="card-title">{{ listing.auction_title }}</h5>
+                <h6 class="card-subtitle">{{ listing.user.username }}</h6>
+                <br>
+                <p clas="card-text">{{ listing.auction_description }}</p>
+                <h6 class="card-subtitle">{{ listing.category }}</h6>
+                <br>
+                <h6 class="card-subtitle">Current Bid: ${{ listing.starting_bid }}</h6>
+                <a href="{% url 'listing_page' listing.id %}">View More</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    </div>
+
+{% endblock %}
+
+
+
+<!-- old code -->
+        <!-- We can access attributes from our AuctionListing here because 
+            were passing in a query set of all our auction listings -->
+            <div><a href="{% url 'listing_page' listing.id %}">{{ listing.auction_title }}</a></div>
+            <br>
+            <div>User: {{ listing.user.username }}</div>
+            <!-- Cannot use spaces between | apparently (these are jinja functions -->
+            {% if listing.image_url|length > 1 %}
+                <div height="500px" width="500px"><img src="{{ listing.image_url }}" alt="{{ listing.auction_title }}" height="100%" width="100%"></div>
+            {% endif %}
+            <div>Current Bid: {{ listing.starting_bid }}</div>
+            <br>
+            <div>{{ listing.auction_description }}</div>
+            <br>
+            <div>{{ listing.category }}</div>

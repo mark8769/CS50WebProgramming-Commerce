@@ -1,0 +1,24 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    {% if message %}
+    <div>
+        {{ message }}
+    </div>
+    <br>
+    {% endif %}
+    <!-- Submit to self for now, not sure where to submit tbh -->
+
+    <form action="{% url 'create_listing' %}" method="post" class="medium_form">
+        {% csrf_token %}
+        <!-- By accessing by form.some_field, we are not able to access the associated labels with it -->
+        {{ form }}
+        <div>
+            <br>
+            <!-- Use bootstrap button class for nice blue -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+    
+{% endblock %}
