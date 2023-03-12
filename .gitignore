@@ -1,0 +1,5 @@
+# ignore python stuff
+*__pycache__/
+
+# ignore mac dot files
+*.DS_Store
