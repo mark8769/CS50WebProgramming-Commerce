@@ -14,15 +14,21 @@ from .models import User, AuctionListing, Watchlist
 from .forms import ListingForm
 
 def index(request):
-    # need to pass in context for active listings
+    '''
+    Route to serve homepage of 
+    website, displays all available 
+    listings on ecommerce site.
+    '''
     return render(request, "auctions/index.html",{
         "listings": AuctionListing.objects.all()
     })
 
-
 def login_view(request):
+    '''
+    Route to serve login page, 
+    or accept login information if already on page.
+    '''
     if request.method == "POST":
-
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
@@ -39,13 +45,18 @@ def login_view(request):
     else:
         return render(request, "auctions/login.html")
 
-
 def logout_view(request):
+    '''
+    Route to handle logout request. 
+    Returns user to index page.    
+    '''
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
-
 def register(request):
+    '''
+    Route to handle register request. 
+    '''
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
@@ -74,13 +85,10 @@ def register(request):
 # https://docs.djangoproject.com/en/4.0/topics/auth/default/#the-login-required-decorator
 @login_required
 def create_listing(request):
-    
+    '''
+    Route to handle the create listing nav link.
+    '''
     if request.method == "POST":
-        # we submitted our new listing, need to do something here
-        # perhaps use the AuctionListing model we created
-        # pretty sure we have to save it to the database somehow
-        # trying to check notes minimally
-
         # we can access our request arguments
         # through
         # post["title"]
@@ -145,7 +153,10 @@ def create_listing(request):
         })
 
 def listing_page(request, auction_id):
-
+    '''
+    Route that returns listing page 
+    of a an auction listing that has been clicked.
+    '''
     auction_listing = AuctionListing.objects.get(id=auction_id)
     is_signedin = request.user.is_authenticated
     is_watching = True
@@ -226,7 +237,10 @@ def listing_page(request, auction_id):
     })
 
 def watchlist(request, auction_id):
-
+    '''
+    Route to handle user adding a listing
+    to their watchlist.
+    '''
     auction_listing = AuctionListing.objects.get(id=auction_id)
     user_object = User.objects.get(id=request.user.id)
     is_watching = True
@@ -253,7 +267,10 @@ def watchlist(request, auction_id):
 
 
 def new_bid(request, auction_id, bid_amount):
-
+    '''
+    Route to handler a user adding
+    a new on an auction listing.
+    '''
     auction_listing = AuctionListing.objects.get(id=auction_id)
     current_bid = auction_listing.starting_bid
     new_bid = float(request.POST["new_bid"])    
