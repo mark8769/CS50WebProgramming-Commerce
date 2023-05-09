@@ -35,21 +35,3 @@
     </div>
 
 {% endblock %}
-
-
-
-<!-- old code -->
-        <!-- We can access attributes from our AuctionListing here because 
-            were passing in a query set of all our auction listings -->
-            <div><a href="{% url 'listing_page' listing.id %}">{{ listing.auction_title }}</a></div>
-            <br>
-            <div>User: {{ listing.user.username }}</div>
-            <!-- Cannot use spaces between | apparently (these are jinja functions -->
-            {% if listing.image_url|length > 1 %}
-                <div height="500px" width="500px"><img src="{{ listing.image_url }}" alt="{{ listing.auction_title }}" height="100%" width="100%"></div>
-            {% endif %}
-            <div>Current Bid: {{ listing.starting_bid }}</div>
-            <br>
-            <div>{{ listing.auction_description }}</div>
-            <br>
-            <div>{{ listing.category }}</div>
