@@ -89,22 +89,6 @@ def create_listing(request):
     Route to handle the create listing nav link.
     '''
     if request.method == "POST":
-        # we can access our request arguments
-        # through
-        # post["title"]
-        # post["description"]
-        # post["starting_bid"]
-        # post["url"]
-
-        # create our AuctionListing object
-        # then save? AuctionListing.save()
-        # we should check that listing does not exist either
-        # we also need a user for our auction listing
-        # I think I saw this on stack overflow during my search,
-        # but this one is off the top of the head remembering
-
-        # form = ListingForm(request.POST)
-        # should be doing if form.is_valid() for error checking, doesnt seem to be useful here though.
 
         user_id = request.user.id
         user = User.objects.get(id=user_id)
@@ -121,10 +105,9 @@ def create_listing(request):
                                     image_url=url,
                                     category=category
         )
-        # pass in a message that listing title is taken
+        
         # https://forum.djangoproject.com/t/userpreference-matching-query-does-not-exist/6845
         # Django will return does not exist if objects.get does not exist
-
         try:
             AuctionListing.objects.get(auction_title=title)
         
