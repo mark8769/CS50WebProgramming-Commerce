@@ -105,7 +105,7 @@ def create_listing(request):
                                     image_url=url,
                                     category=category
         )
-        
+
         # https://forum.djangoproject.com/t/userpreference-matching-query-does-not-exist/6845
         # Django will return does not exist if objects.get does not exist
         try:
@@ -161,7 +161,21 @@ def listing_page(request, auction_id):
         "listing": auction_listing
     })
 
-def watchlist(request, auction_id):
+
+def watchlist(request):
+    '''
+    GET route to handler user wanting
+    to view their watchlist items.
+    '''
+    user = User.objects.get(id=request.user.id)
+    #https://docs.djangoproject.com/en/4.2/topics/db/queries/#retrieving-a-single-object-with-get
+    auctions_listings = Watchlist.objects.filter(user=user)
+
+    return render(request, "auctions/watchlist.html",{
+        "listings": auctions_listings
+    })
+
+def add_watchlist(request, auction_id):
     '''
     POST route to handle user adding a listing
     to their watchlist.
@@ -192,15 +206,18 @@ def new_bid(request, auction_id):
     new_bid = float(request.POST["new_bid"])
     auction_listing = AuctionListing.objects.get(id=auction_id)
     current_bid = auction_listing.starting_bid
-    current_user = User.objects.get(id=request.user.id)
+    user_id = int(request.user.id)
+    current_user = User.objects.get(id=user_id)
     is_signedin = request.user.is_authenticated
 
     if new_bid > current_bid:
         # only updating one field, recommended for performance improvements
         # could also use listing.save()
         auction_listing.starting_bid = new_bid
+        auction_listing.highest_bidder_id = current_user
         # https://docs.djangoproject.com/en/dev/ref/models/instances/#specifying-which-fields-to-save
         auction_listing.save(update_fields=["starting_bid"])
+        auction_listing.save(update_fields=["highest_bidder_id"])
         # check if bid on item already exists
         user_bid_on_item = Bid(user=current_user,
                             auction_id=auction_listing,
