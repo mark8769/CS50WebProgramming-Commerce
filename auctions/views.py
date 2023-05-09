@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 # making querys for django SQL statements
 # https://docs.djangoproject.com/en/4.1/topics/db/queries/
 
-from .models import User, AuctionListing, Watchlist
+from .models import User, AuctionListing, Watchlist, Bid
 from .forms import ListingForm
 
 def index(request):
@@ -154,133 +154,81 @@ def create_listing(request):
 
 def listing_page(request, auction_id):
     '''
-    Route that returns listing page 
-    of a an auction listing that has been clicked.
+    GET route that returns listing page 
+    of an auction listing that has been clicked.
     '''
+    # Get auction listing.
     auction_listing = AuctionListing.objects.get(id=auction_id)
     is_signedin = request.user.is_authenticated
-    is_watching = True
+    is_watching = None
 
     if is_signedin:
-
+        # Get current signed in user.
         user_object = User.objects.get(id=request.user.id)
-        # Check if record already exists.
-        # If it does, update current record.
-        # Else make a new record.
         try:
             watchlist_item = Watchlist.objects.get(user=user_object, item=auction_listing)
-            
-            if request.method == "POST":
-                # if watchlist item exists, then we're taking off watchlist
-                is_watching = False
-
+            is_watching = True
+        # If watchlist item does not exist.
         except ObjectDoesNotExist:
-            
-            if request.method == "POST":
-                watchlist_item = Watchlist(user=user_object, item=auction_listing)
-            else:
-                is_watching = False
+            is_watching = False
 
-    if request.method == "POST":        
-        
-        # new bid submitted
-        # https://stackoverflow.com/questions/5895588/django-multivaluedictkeyerror-error-how-do-i-deal-with-it
-        new_bid = request.POST.get('new_bid', False)
-
-        if new_bid is not False:
-
-            current_bid = auction_listing.starting_bid
-            new_bid = float(request.POST["new_bid"])    
-            
-            if new_bid > current_bid:
-
-                auction_listing.starting_bid = new_bid
-                # only updating one field, recommended for performance improvements
-                # could also use listing.save()
-                # https://docs.djangoproject.com/en/dev/ref/models/instances/#specifying-which-fields-to-save
-                auction_listing.save(update_fields=["starting_bid"])
-            
-                return render(request, "auctions/listing_page.html",{
-                    "is_watching": is_watching,
-                    "signed_in": is_signedin,
-                    "listing": auction_listing
-                })
-
-            else:
-
-                return render(request, "auctions/listing_page.html",{
-                    "message": "Bid amount is not greater than current bid!",
-                    "is_watching": is_watching,
-                    "signed_in": is_signedin,
-                    "listing": auction_listing
-                })
-
-        # user added item to watchlist
-        else:
-
-            if is_watching:
-                watchlist_item.save()
-            else:    
-                watchlist_item.delete()
-
-            return render(request, "auctions/listing_page.html",{
-                "is_watching": is_watching,
-                "signed_in": is_signedin,
-                "listing": auction_listing
-            })
-
-    # can either be a user, or not a user. Watchlist button dependent on user being logged in
     return render(request, "auctions/listing_page.html",{
-        "listing": auction_listing,
         "is_watching": is_watching,
-        "signed_in": is_signedin
+        "signed_in": is_signedin,
+        "listing": auction_listing
     })
 
 def watchlist(request, auction_id):
     '''
-    Route to handle user adding a listing
+    POST route to handle user adding a listing
     to their watchlist.
     '''
     auction_listing = AuctionListing.objects.get(id=auction_id)
     user_object = User.objects.get(id=request.user.id)
-    is_watching = True
 
-    # Check if record already exists.
-    # If it does, update current record.
-    # Else make a new record.
     try:
+        # If item already on watchlist then delete.
         watchlist_item = Watchlist.objects.get(user=user_object, item=auction_listing)
-        
-        if request.method == "POST":
-            # if watchlist item exists, then we're taking off watchlist
-            is_watching = False
+        watchlist_item.delete()
 
     except ObjectDoesNotExist:
-        
-        if request.method == "POST":
-            watchlist_item = Watchlist(user=user_object, item=auction_listing)
-        else:
-            is_watching = False
+        # If item not on watchlist then save.
+        watchlist_item = Watchlist(user=user_object, item=auction_listing)
+        watchlist_item.save()
 
     # return HttpResponseRedirect(reverse("listing_page"))
     return redirect('listing_page', auction_id=auction_id)
 
 
-def new_bid(request, auction_id, bid_amount):
+# TODO: Attach a bid to a user. 5/8/23
+def new_bid(request, auction_id):
     '''
-    Route to handler a user adding
+    POST route to handle a user adding
     a new on an auction listing.
     '''
+    new_bid = float(request.POST["new_bid"])
     auction_listing = AuctionListing.objects.get(id=auction_id)
     current_bid = auction_listing.starting_bid
-    new_bid = float(request.POST["new_bid"])    
-    
-    if new_bid > current_bid:
+    current_user = User.objects.get(id=request.user.id)
+    is_signedin = request.user.is_authenticated
 
-        auction_listing.starting_bid = new_bid
+    if new_bid > current_bid:
         # only updating one field, recommended for performance improvements
         # could also use listing.save()
+        auction_listing.starting_bid = new_bid
         # https://docs.djangoproject.com/en/dev/ref/models/instances/#specifying-which-fields-to-save
         auction_listing.save(update_fields=["starting_bid"])
+        # check if bid on item already exists
+        user_bid_on_item = Bid(user=current_user,
+                            auction_id=auction_listing,
+                            bid_price=new_bid)
+        user_bid_on_item.save()
+
+    return render(request, "auctions/listing_page.html",{
+        "signed_in": is_signedin,
+        "listing": auction_listing
+    })
+
+
         
     
