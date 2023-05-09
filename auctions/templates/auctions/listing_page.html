@@ -13,7 +13,7 @@
     {% endif %}
 
     <div><h1>{{ listing.auction_title }}</h1></div>
-    <form action="{% url 'watchlist' listing.id %}" method="post">
+    <form action="{% url 'add_watchlist' listing.id %}" method="post">
         {% csrf_token %}
         {% if signed_in %}
             {% if is_watching %}
@@ -24,7 +24,7 @@
         {% endif %}
     </form>
     <br>
-    <div>User: {{ listing.user.username }}</div>
+    <div>Seller Name: {{ listing.user.username }}</div>
     <!-- Cannot use spaces between | apparently (these are jinja functions -->
     {% if listing.image_url|length > 1 %}
         <div height="500px" width="500px"><img src="{{ listing.image_url }}" alt="{{ listing.auction_title }}" height="100%" width="100%"></div>
@@ -37,7 +37,7 @@
 
     {% if signed_in %}
         <div class="form-group" style="width: 30%">
-            <form action="{% url 'listing_page' listing.id %}" method="post">
+            <form action="{% url 'new_bid' listing.id %}" method="post">
                 {% csrf_token %}
                 <label><h6>Bid on item</h6></label>
                 <br>
