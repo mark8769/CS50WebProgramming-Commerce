@@ -229,6 +229,5 @@ def new_bid(request, auction_id):
         "listing": auction_listing
     })
 
-
-        
-    
+def categories(request):
+    print("do nothing")
