@@ -1,7 +1,6 @@
 body {
     padding: 10px;
 }
-
 .medium_form{
     /* Wasn't working because of cookies, so I wouldn't see changes.... */
     /* width: 500px !important; */
@@ -9,13 +8,25 @@ body {
     /* margin-left: auto;
     margin-right: auto; */
 }
-
 select{
     /* turn select element to block instead of inline */
     display: block;
 }
-
 /* Select div elements with class card */
 div.card {
     width: 90%;
+}
+div{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.listing-image{
+    height: 400px;
+    width: 400px;
+}
+.listing-image > img{
+    height: 100%;
+    width: 100%;
+    background-color: blue;
 }
