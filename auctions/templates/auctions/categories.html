@@ -1,0 +1,18 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<!-- https://getbootstrap.com/docs/4.0/components/card/#list-groups
+-->
+<div class="card" styles="width: 18rem;">
+    <div class="card-header">
+        Categories
+    </div>
+    {% for cat in categories %}
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <a href="http://localhost:8000/categories/{{ cat }}">{{ cat }}</a>
+        </li>
+    </ul>
+    {% endfor %}
+</div>
+{% endblock %}
