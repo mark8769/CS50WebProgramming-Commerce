@@ -27,6 +27,13 @@ div{
 }
 .listing-image > img{
     height: 100%;
-    width: 100%;
+    width: 80%;
     background-color: blue;
+}
+.flex-container{
+    display:flex;
+    flex-direction: row;
+}
+.flex-container > .flex-item{
+    width: 50%;
 }
