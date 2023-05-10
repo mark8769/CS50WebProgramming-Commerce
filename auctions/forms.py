@@ -16,7 +16,7 @@ class ListingForm(forms.ModelForm):
             # DecimalField had no attrs field, so caused program not too work. Not form specific field.
             # Sane thing with URLField, not form specific. Also not a "widget".
             # Widget's have the attrs keyword argument, to style with css
-            'starting_bid': forms.NumberInput(attrs=css_dict),
+            'starting_bid': forms.NumberInput(attrs={"class":"form-control", "maxlength": "250"}),
             # there's a pattern attribute for input elements in html, what kind of regex for .jpg,.png,.svg?
             'image_url': forms.URLInput(attrs={'class': 'form-control'})
         }
