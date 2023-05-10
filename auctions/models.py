@@ -18,19 +18,6 @@ https://docs.djangoproject.com/en/4.0/topics/db/models/#automatic-primary-key-fi
 So to refer to it, we would use it as a ForeignKey if that makes sense
 '''
 
-'''
-Models requirements:
-
-Application should have at least 4 models.
-1. Users
-2. Auction Listings
-3. Bid
-4. Comments on auction listings
-
-You can decide the attributes for each model, (this will be in the database)
-And the type they should be.
-
-'''
 # https://docs.djangoproject.com/en/4.0/ref/models/fields/#choices
 class Categories(models.TextChoices):
     CLOTHING = "Clothing", _('Clothing')
@@ -46,6 +33,11 @@ class Categories(models.TextChoices):
     PETS = "Pets", _("Pets")
     OTHER = "Other", _("Other")
 
+    def get_categories():
+        return ["Clothing", "Shoes", "Vehicle",
+                "Watches", "Sports", "Home", "Toys",
+                "Business", "Health & Beauty", "Pets", "Other"]
+
 class User(AbstractUser):
 
     # It is recommended to use Abstract User even if User class
@@ -53,10 +45,9 @@ class User(AbstractUser):
     # Can add additional fields here. (We inherit all fiels from default User class)
     # https://docs.djangoproject.com/en/4.1/ref/contrib/auth/
 
+
     def __str__(self):
         # id is autoincremented, and it is suggested not to add the field yourself
-        # in the django documentation, but nowhere could I find how to access the id
-        # besides the harvard notes, or stack overflow
         return f"User: {self.username} Id: {self.id}"
 
 class AuctionListing(models.Model):
@@ -76,12 +67,17 @@ class AuctionListing(models.Model):
         choices=Categories.choices,
         default=Categories.OTHER,
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # https://stackoverflow.com/questions/41595364/fields-e304-reverse-accessor-clashes-in-django
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name="creator")
+    # Would run into issues if we allowed user to remove bid, but good for now.
+    highest_bidder_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder",null=True, blank=True)
     auction_title = models.CharField(max_length=64)
     starting_bid = models.DecimalField(max_digits=8, decimal_places=2)
     auction_description = models.TextField()
     # https://sentry.io/answers/django-difference-between-null-and-blank/#:~:text=By%20default%20all%20fields%20are,that%20pub_time%20can%20be%20empty.
     image_url = models.URLField(max_length=255, blank=True)
+    is_open = models.BooleanField(default=True)
 
     def __str__(self):
         user = f"User: {self.user.username}\n"
@@ -114,7 +110,6 @@ class Bid(models.Model):
         user = f"User: {self.user}\n"
         auction_id = f"Auction ID: {self.auction_id}\n"
         bid_price = f"Bid Price: {self.bid_price}\n"
-
         return user + auction_id + bid_price
 
 class Comment(models.Model):
@@ -128,11 +123,11 @@ class Comment(models.Model):
         user = f"User: {self.user}\n"
         comment = f"User Comment: {self.comment}\n"
 
-
 class Watchlist(models.Model):
-
     # if user is ever deleted, delete any associated watchlists rows
     # given a User, gives us a way to look at any watchlist item associated with our user (related name)
+    # This lets us retrieve all the users with a specific item as their watchlist
+    # we want the opposite effect.
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist_items")
     # if Auction Listing item is removed, delete from watchlist
     item = models.ForeignKey(AuctionListing, on_delete=models.CASCADE)
