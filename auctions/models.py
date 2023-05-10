@@ -49,7 +49,7 @@ class User(AbstractUser):
     def __str__(self):
         # id is autoincremented, and it is suggested not to add the field yourself
         return f"User: {self.username} Id: {self.id}"
-
+    
 class AuctionListing(models.Model):
 
     # pull some ideas 'create listing' specification
@@ -96,6 +96,20 @@ class AuctionListing(models.Model):
 
         return user + title + start_bid + desc + url + category
 
+class Comment(models.Model):
+    # comment is placed by logged-in user
+    # have user_id associated with comment
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # have comment field
+    comment = models.TextField()
+    # https://cs50.harvard.edu/web/2020/notes/4/ (for some examples of how to implement models)
+    auction = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, related_name="comments", blank=True, null=True)
+    
+    def __str__(self):
+        user = f"User: {self.user}\n"
+        comment = f"User Comment: {self.comment}\n"
+        return user + comment
+
 class Bid(models.Model):
     # bid is places by logged-in user
     # need user_id to associate with a user
@@ -111,17 +125,6 @@ class Bid(models.Model):
         auction_id = f"Auction ID: {self.auction_id}\n"
         bid_price = f"Bid Price: {self.bid_price}\n"
         return user + auction_id + bid_price
-
-class Comment(models.Model):
-    # comment is placed by logged-in user
-    # have user_id associated with comment
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # have comment field
-    comment = models.TextField()
-    
-    def __str__(self):
-        user = f"User: {self.user}\n"
-        comment = f"User Comment: {self.comment}\n"
 
 class Watchlist(models.Model):
     # if user is ever deleted, delete any associated watchlists rows
