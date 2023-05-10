@@ -12,11 +12,11 @@ class ListingForm(forms.ModelForm):
         css_dict = {'class': 'form-control'}
         widgets = {
             'auction_title': forms.TextInput(attrs=css_dict),
-            'auction_description': forms.Textarea(attrs=css_dict),
+            'auction_description': forms.Textarea(attrs={'class':'form-control', 'maxlength': '250'}),
             # DecimalField had no attrs field, so caused program not too work. Not form specific field.
             # Sane thing with URLField, not form specific. Also not a "widget".
             # Widget's have the attrs keyword argument, to style with css
-            'starting_bid': forms.NumberInput(attrs={"class":"form-control", "maxlength": "250"}),
+            'starting_bid': forms.NumberInput(attrs=css_dict),
             # there's a pattern attribute for input elements in html, what kind of regex for .jpg,.png,.svg?
             'image_url': forms.URLInput(attrs={'class': 'form-control'})
         }
