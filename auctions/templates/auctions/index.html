@@ -18,26 +18,28 @@
     {% endif %}
     <div class="row row-cols-1 row-cols-md-3 g-4">
     {% for listing in listings %}
-    <div class="col">
-        <div class="card h-100">
-            {% if listing.image_url|length > 1 %}
-                <img class="card-img-top" src="{{ listing.image_url }}" alt="{{ listing.auction_title }}">
-            {% else %}
-                <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png">
-            {% endif %}
-        
-            <div class="card-body">
-                <h5 class="card-title">{{ listing.auction_title }}</h5>
-                <h6 class="card-subtitle">{{ listing.user.username }}</h6>
-                <br>
-                <p clas="card-text">{{ listing.auction_description }}</p>
-                <h6 class="card-subtitle">{{ listing.category }}</h6>
-                <br>
-                <h6 class="card-subtitle">Current Bid: ${{ listing.starting_bid }}</h6>
-                <a href="{% url 'listing_page' listing.id %}">View More</a>
+        <!-- if listing.is_open  -->
+        <div class="col">
+            <div class="card h-100">
+                {% if listing.image_url|length > 1 %}
+                    <img class="card-img-top" src="{{ listing.image_url }}" alt="{{ listing.auction_title }}">
+                {% else %}
+                    <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png">
+                {% endif %}
+            
+                <div class="card-body">
+                    <h5 class="card-title">{{ listing.auction_title }}</h5>
+                    <h6 class="card-subtitle">{{ listing.user.username }}</h6>
+                    <br>
+                    <p clas="card-text">{{ listing.auction_description }}</p>
+                    <h6 class="card-subtitle">{{ listing.category }}</h6>
+                    <br>
+                    <h6 class="card-subtitle">Current Bid: ${{ listing.starting_bid }}</h6>
+                    <a href="{% url 'listing_page' listing.id %}">View More</a>
+                </div>
             </div>
         </div>
-    </div>
+        <!-- endif -->
     {% endfor %}
 
     </div>
