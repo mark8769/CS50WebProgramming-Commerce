@@ -102,6 +102,7 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # have comment field
     comment = models.TextField()
+    time = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     # https://cs50.harvard.edu/web/2020/notes/4/ (for some examples of how to implement models)
     auction = models.ForeignKey(AuctionListing, on_delete=models.CASCADE, related_name="comments", blank=True, null=True)
     
