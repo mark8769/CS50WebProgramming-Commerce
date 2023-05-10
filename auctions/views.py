@@ -143,9 +143,12 @@ def listing_page(request, auction_id):
     # Get auction listing.
     auction_listing = AuctionListing.objects.get(id=auction_id)
     is_signedin = request.user.is_authenticated
+    user_object = None
+    if (is_signedin):
+        # Get current signed in user.
+        user_object = User.objects.get(id=request.user.id)
+
     is_watching = None
-    # Get current signed in user.
-    user_object = User.objects.get(id=request.user.id)
     is_owner = False
     is_winner = False
 
