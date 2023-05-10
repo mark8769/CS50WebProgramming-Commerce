@@ -170,7 +170,7 @@ def listing_page(request, auction_id):
         "is_watching": is_watching,
         "signed_in": is_signedin,
         "listing": auction_listing,
-        "min_bid": float(auction_listing.starting_bid) + .01,
+        "min_bid": round(float(auction_listing.starting_bid) + .01, 2),
         "is_owner": is_owner,
         "is_winner": is_winner,
         "comments": auction_listing.comments.all()
@@ -236,10 +236,11 @@ def new_bid(request, auction_id):
                             bid_price=new_bid)
         user_bid_on_item.save()
 
-    return render(request, "auctions/listing_page.html",{
-        "signed_in": is_signedin,
-        "listing": auction_listing
-    })
+    return HttpResponseRedirect(reverse("listing_page", args=(auction_id,)))
+    # return render(request, "auctions/listing_page.html",{
+    #     "signed_in": is_signedin,
+    #     "listing": auction_listing
+    # })
 
 def categories(request):
     categories = AuctionListing.objects.all()[0]
