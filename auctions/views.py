@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 # making querys for django SQL statements
 # https://docs.djangoproject.com/en/4.1/topics/db/queries/
 
-from .models import User, AuctionListing, Watchlist, Bid
+from .models import User, AuctionListing,Watchlist, Bid, Categories, Comment
 from .forms import ListingForm
 
 def index(request):
@@ -144,10 +144,18 @@ def listing_page(request, auction_id):
     auction_listing = AuctionListing.objects.get(id=auction_id)
     is_signedin = request.user.is_authenticated
     is_watching = None
+    # Get current signed in user.
+    user_object = User.objects.get(id=request.user.id)
+    is_owner = False
+    is_winner = False
+
+    if (auction_listing.user == user_object):
+        is_owner = True
+
+    if (auction_listing.highest_bidder_id == user_object and not auction_listing.is_open):
+        is_winner = True
 
     if is_signedin:
-        # Get current signed in user.
-        user_object = User.objects.get(id=request.user.id)
         try:
             watchlist_item = Watchlist.objects.get(user=user_object, item=auction_listing)
             is_watching = True
@@ -158,9 +166,12 @@ def listing_page(request, auction_id):
     return render(request, "auctions/listing_page.html",{
         "is_watching": is_watching,
         "signed_in": is_signedin,
-        "listing": auction_listing
+        "listing": auction_listing,
+        "min_bid": float(auction_listing.starting_bid) + .01,
+        "is_owner": is_owner,
+        "is_winner": is_winner,
+        "comments": auction_listing.comments.all()
     })
-
 
 def watchlist(request):
     '''
@@ -193,11 +204,9 @@ def add_watchlist(request, auction_id):
         watchlist_item = Watchlist(user=user_object, item=auction_listing)
         watchlist_item.save()
 
-    # return HttpResponseRedirect(reverse("listing_page"))
-    return redirect('listing_page', auction_id=auction_id)
+    #return redirect('listing_page', auction_id=auction_id)
+    return HttpResponseRedirect(reverse("listing_page", args=(auction_id,)))
 
-
-# TODO: Attach a bid to a user. 5/8/23
 def new_bid(request, auction_id):
     '''
     POST route to handle a user adding
@@ -230,4 +239,35 @@ def new_bid(request, auction_id):
     })
 
 def categories(request):
-    print("do nothing")
+    categories = AuctionListing.objects.all()[0]
+    return render(request, "auctions/categories.html",{
+        "categories": Categories.get_categories()
+    })
+
+def category(request, category):
+    auction_listings = AuctionListing.objects.filter(category=category)
+    return render(request, "auctions/index.html",{
+        "listings": auction_listings,
+        "category": category,
+        "is_filtered": True
+    })
+
+def cancel(request, auction_id):
+    auction = AuctionListing.objects.get(id=auction_id)
+    auction.is_open = False
+    auction.save()
+    # Redirect back to homepage. 
+    # (Do this instead of passing in context, 
+    # which index route should be doing.)
+    return HttpResponseRedirect(reverse("index"))
+
+def comment(request, auction_id):
+    comment = request.POST["new_comment"]
+    user = User.objects.get(id=request.user.id)
+    curr_auction = AuctionListing.objects.get(id=auction_id)
+    new_comment = Comment(user=user,comment=comment, auction=curr_auction)
+    new_comment.save()
+    # Direct assignment to the 
+    # forward side of a many-to-many set is prohibited. 
+    # Use comment.set() instead.
+    return HttpResponseRedirect(reverse("listing_page", args=(auction_id,)))
