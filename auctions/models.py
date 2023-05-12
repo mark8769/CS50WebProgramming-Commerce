@@ -1,14 +1,13 @@
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django import forms
-
 # https://docs.djangoproject.com/en/4.1/topics/auth/customizing/
 # https://docs.djangoproject.com/en/4.0/ref/models/fields/
 # https://docs.djangoproject.com/en/4.0/ref/models/fields/#field-types
 # https://docs.djangoproject.com/en/4.0/topics/db/models/#automatic-primary-key-fields
 # https://docs.djangoproject.com/en/4.0/ref/models/fields/#choices
 # https://docs.djangoproject.com/en/4.1/ref/contrib/auth/
+
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 class Categories(models.TextChoices):
     CLOTHING = "Clothing", _('Clothing')
@@ -30,7 +29,6 @@ class Categories(models.TextChoices):
                 "Business", "Health & Beauty", "Pets", "Other"]
 
 class User(AbstractUser):
-
     # It is recommended to use Abstract User even if User class
     # is enough, because it is more customizable.
     # Can add additional fields here. (We inherit all fiels from default User class)

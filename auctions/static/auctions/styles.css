@@ -6,6 +6,8 @@ styles.css
 /* Ideally I wouldn't need this... */
 body{
     /* overflow-x: hidden; */
+    /* https://cssgradient.io/gradient-backgrounds/ */
+    background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
 }
 /* Overflown by 10 px, cant figure it out, 
 but this works, and its not bad practice. */
@@ -15,9 +17,12 @@ but this works, and its not bad practice. */
 .body-content {
     padding: 10px;
 }
+.small_form{
+    width: 30%;
+}
 /* Make form inputs only take up 60% of page. */
 .medium_form{
-    width: 60%;
+    width: 50%;
 }
 /* Avoid elements being placed next to select element. */
 select{
