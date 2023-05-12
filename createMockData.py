@@ -33,6 +33,10 @@ def create_listings():
                               image_url="https://hypebeast.com/image/2021/11/adidas-yeezy-boost-350-v2-beluga-reflective-release-date-info-001.jpg",
                               category="Shoes")
     one_list.save()
+    new_comment = Comment(user=user_four, comment="Love these shoes!", auction=one_list)
+    new_comment.save()
+    new_comment = Comment(user=user_two, comment="These look like zebras!", auction=one_list)
+    new_comment.save()
 
     two_list = AuctionListing(user=user_two,
                               auction_title="Yeezy 350 Pirate",
@@ -41,7 +45,11 @@ def create_listings():
                               image_url="https://sneakernews.com/wp-content/uploads/2022/08/adidas-yeezy-boost-350-pirate-black-bb5350-0.jpg",
                               category="Shoes")
     two_list.save()
-
+    new_comment = Comment(user=user_three, comment="These shoes are my grails!", auction=two_list)
+    new_comment.save()
+    new_comment = Comment(user=user_five, comment="Best yeezys ever released!", auction=two_list)
+    new_comment.save()
+    
     three_list = AuctionListing(user=user_three,
                                 auction_title="Yeezy 350 Zebra",
                                 starting_bid=1100,
@@ -49,6 +57,10 @@ def create_listings():
                                 image_url="https://sneakernews.com/wp-content/uploads/2022/04/zebra-yeezys-release-date-2.jpg",
                                 category="Shoes")
     three_list.save()
+    new_comment = Comment(user=user_six, comment="These shoes are fake!", auction=three_list)
+    new_comment.save()
+    new_comment = Comment(user=user_five, comment="I don't know why this listing hasn't been taken down yet! The shoes are obviously fake!", auction=three_list)
+    new_comment.save()
 
     four_list = AuctionListing(user=user_four,
                    auction_title="Yeezy 350 Turtle Dove",
@@ -56,7 +68,12 @@ def create_listings():
                    auction_description="Released in 2015, the adidas Yeezy Boost 350 Turtle Dove is the first colorway to kick off Yeezy's expansive 350 line. Composed of a grey and brown patterned Primeknit, the design was one of the most comfort focus Yeezys.",
                    image_url="https://sneakernews.com/wp-content/uploads/2016/02/yeezy-boost-50-turtle-dove-2016-release.jpg",
                    category="Shoes")
+    
     four_list.save()
+    new_comment = Comment(user=user_five, comment="Love the shoes, whats up with the name?", auction=four_list)
+    new_comment.save()
+    new_comment = Comment(user=user_one, comment="When did these shoes release?", auction=four_list)
+    new_comment.save()
 
     five_list = AuctionListing(user=user_five,
                 auction_title="Yeezy 350 Blue Tint",
@@ -66,6 +83,12 @@ def create_listings():
                 category="Shoes")
     five_list.save()
 
+    new_comment = Comment(user=user_one, comment="The price is out of my range!", auction=five_list)
+    new_comment.save()
+    new_comment = Comment(user=user_two, comment="When did these shoes release?", auction=five_list)
+    new_comment.save()
+
+
     six_list = AuctionListing(user=user_six,
                 auction_title="Bearbrick x CLOT Panda 1000%",
                 starting_bid=300,
@@ -73,6 +96,11 @@ def create_listings():
                 image_url="https://image-cdn.hypb.st/https%3A%2F%2Fhypebeast.com%2Fimage%2F2022%2F11%2Fclot-medicom-toy-bearbrick-panda-figure-info-001.jpg?q=70&w=1125&cbr=1&fit=max",
                 category="Toys")
     six_list.save()
+
+    new_comment = Comment(user=user_five, comment="People really buy anything these days....", auction=six_list)
+    new_comment.save()
+    new_comment = Comment(user=user_two, comment="This collab was awesome, hope to win the auction!", auction=six_list)
+    new_comment.save()
 
     # have something for watches, home, vehicles, accessories, business, cosmetics, pets, other
     one_2_list = AuctionListing(user=user_one,
@@ -82,6 +110,11 @@ def create_listings():
                 image_url="https://www.supremecommunity.com/u/season/fall-winter2022/accessories/7eebc15372e543d1a7e1ef0ebe88428b_sqr.jpg",
                 category="Home")
     one_2_list.save()
+
+    new_comment = Comment(user=user_five, comment="It's just a regular toolbox, why is the price so high!", auction=one_2_list)
+    new_comment.save()
+    new_comment = Comment(user=user_two, comment="This collab was awesome, hope to win the auction!", auction=one_2_list)
+    new_comment.save()
 
     two_2_list = AuctionListing(user=user_two,
                 auction_title="Supreme Clay Brick",
@@ -98,6 +131,9 @@ def create_listings():
                 image_url="https://media.techeblog.com/images/mattel-hot-wheels-1-10-rc-tesla-cybertruck-cyberquad.jpg",
                 category="Vehicle")
     three_2_list.save()
+
+    new_comment = Comment(user=user_four, comment="I really love teslas, I absolutely need this!", auction=three_2_list)
+    new_comment.save()
 
     four_2_list = AuctionListing(user=user_four,
                 auction_title="Funko Pop! Games Pokemon Charizard 10-Inch Target Exclusive Figure #851",
@@ -157,7 +193,7 @@ def create_listings():
 
 def main():
     #create_users()
-    #create_listings()
+    create_listings()
     
 
 
