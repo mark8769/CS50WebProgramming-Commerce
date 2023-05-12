@@ -1,15 +1,15 @@
+# https://docs.djangoproject.com/en/4.1/ref/models/class/#django.db.models.Model.DoesNotExist
+# https://docs.djangoproject.com/en/4.1/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist
+# making querys for django SQL statements
+# https://docs.djangoproject.com/en/4.1/topics/db/queries/
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-# https://docs.djangoproject.com/en/4.1/ref/exceptions/#django.core.exceptions.ObjectDoesNotExist
-# https://docs.djangoproject.com/en/4.1/ref/models/class/#django.db.models.Model.DoesNotExist
 from django.core.exceptions import ObjectDoesNotExist
-# making querys for django SQL statements
-# https://docs.djangoproject.com/en/4.1/topics/db/queries/
-
 from .models import User, AuctionListing,Watchlist, Bid, Categories, Comment
 from .forms import ListingForm
 
@@ -243,12 +243,17 @@ def new_bid(request, auction_id):
     # })
 
 def categories(request):
-    categories = AuctionListing.objects.all()[0]
+    '''
+    GET route to return categories page.
+    '''
     return render(request, "auctions/categories.html",{
         "categories": Categories.get_categories()
     })
 
 def category(request, category):
+    '''
+    GET route to return listings that match a category.
+    '''
     auction_listings = AuctionListing.objects.filter(category=category)
     return render(request, "auctions/index.html",{
         "listings": auction_listings,
@@ -257,6 +262,9 @@ def category(request, category):
     })
 
 def cancel(request, auction_id):
+    '''
+    GET route to let listing owner end auction.
+    '''
     auction = AuctionListing.objects.get(id=auction_id)
     auction.is_open = False
     auction.save()
@@ -266,6 +274,9 @@ def cancel(request, auction_id):
     return HttpResponseRedirect(reverse("index"))
 
 def comment(request, auction_id):
+    '''
+    POST route to let user add a comment to a listing.
+    '''
     comment = request.POST["new_comment"]
     user = User.objects.get(id=request.user.id)
     curr_auction = AuctionListing.objects.get(id=auction_id)
