@@ -4,11 +4,13 @@ Mark Ortega-Ponce
 styles.css
 */
 /* Ideally I wouldn't need this... */
-body{
-    /* overflow-x: hidden; */
-    /* https://cssgradient.io/gradient-backgrounds/ */
+html{
     background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
 }
+/* body{ */
+    /* overflow-x: hidden; */
+    /* https://cssgradient.io/gradient-backgrounds/ */
+/* } */
 /* Overflown by 10 px, cant figure it out, 
 but this works, and its not bad practice. */
 .overflow-issue{
@@ -56,5 +58,11 @@ that puts items side by side. */
 /* Let there be 2 flex items per row that 
 each take 50% of flex container width. */
 .flex-container > .flex-item{
+    width: 50%;
+}
+.white_text > strong{
+    color: white;
+}
+.comments{
     width: 50%;
 }
