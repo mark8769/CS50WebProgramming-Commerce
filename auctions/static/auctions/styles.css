@@ -1,39 +1,55 @@
-body {
+/*
+Mark Ortega-Ponce
+5/11/23
+styles.css
+*/
+/* Ideally I wouldn't need this... */
+body{
+    /* overflow-x: hidden; */
+}
+/* Overflown by 10 px, cant figure it out, 
+but this works, and its not bad practice. */
+.overflow-issue{
+    width: 100%;
+}
+.body-content {
     padding: 10px;
 }
+/* Make form inputs only take up 60% of page. */
 .medium_form{
-    /* Wasn't working because of cookies, so I wouldn't see changes.... */
-    /* width: 500px !important; */
     width: 60%;
-    /* margin-left: auto;
-    margin-right: auto; */
 }
+/* Avoid elements being placed next to select element. */
 select{
     /* turn select element to block instead of inline */
     display: block;
 }
-/* Select div elements with class card */
-div.card {
-    width: 90%;
-}
+/* Add padding to top/bottom of divs. */
 div{
-    margin-top: 10px;
-    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
-
+/* Following css is for listing page view. */
 .listing-image{
     height: 400px;
     width: 400px;
 }
+/* Make images take up 100% of height, 
+and 80% container width. */
 .listing-image > img{
     height: 100%;
     width: 80%;
-    background-color: blue;
 }
+/* Make flex container 
+that puts items side by side. */
 .flex-container{
     display:flex;
     flex-direction: row;
 }
+/* Let there be 2 flex items per row that 
+each take 50% of flex container width. */
 .flex-container > .flex-item{
     width: 50%;
 }
