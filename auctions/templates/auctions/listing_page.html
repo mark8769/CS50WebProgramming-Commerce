@@ -58,7 +58,7 @@
                             {% csrf_token %}
                             <label><h6>Bid on item</h6></label>
                             <br>
-                            <input class='form-control' type="number" step="0.01" placeholder="Enter bid amount" name="new_bid" min="{{ min_bid }}" required>
+                            <input class='form-control' type="number" step="0.01" placeholder="Enter bid amount" name="new_bid" min="{{ min_bid }}" max="40000" required>
                             <div>
                                 <button type='submit' class="btn btn-outline-secondary">Submit Bid</button>
                             </div>
